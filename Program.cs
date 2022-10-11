@@ -32,9 +32,16 @@ namespace Lab08Console
             LambdaIntroToLINQ();
             Console.ReadKey();
             LambdaFiltering();
+            Console.ReadKey();
             LambdaOrdering();
+            Console.ReadKey();
             LambdaGrouping();
-
+            Console.ReadKey();
+            LambdaGrouping2();
+            Console.ReadKey();
+            LambdaJoining();
+            Console.ReadKey();
+            LambdaDataSource();
             Console.Read();
             //Console.Clear(); 
 
@@ -143,10 +150,10 @@ namespace Lab08Console
 
         static void LambdaFiltering()
         {
-            var queryLondonCustomers =
+            var queryLondonCustomer =
                 context.clientes.Where(c => c.Ciudad == "Londres");
 
-            foreach (var item in queryLondonCustomers)
+            foreach (var item in queryLondonCustomer)
             {
                 Console.WriteLine(item.Ciudad);
             }
@@ -155,11 +162,11 @@ namespace Lab08Console
 
         static void LambdaOrdering()
         {
-            var queryLondonCustomers3 = context.clientes
+            var queryLondonCustomers2 = context.clientes
                 .Where(c => c.Ciudad == "Londres")
                 .OrderBy(c => c.NombreCompañia);
 
-            foreach (var item in queryLondonCustomers3)
+            foreach (var item in queryLondonCustomers2)
             {
                 Console.WriteLine(item.NombreCompañia);
             }
@@ -180,5 +187,40 @@ namespace Lab08Console
             }
 
         }
+
+        static void LambdaGrouping2()
+        {
+            var custQuery = context.clientes.GroupBy(x => x.Ciudad)
+                            .Where(x => x.Count() > 2).OrderBy(x => x.Key);
+            foreach (var customer in custQuery)
+            {
+                Console.WriteLine(customer.Key );
+            }
+        }
+
+       static void LambdaJoining()
+        {
+            var innerJoinQuery = context.clientes
+                .Join(context.Pedidos, cust => cust.idCliente,
+                dist => dist.IdCliente,
+                (cust,dist)=> new { CustomerName = cust.NombreCompañia,
+                DistrbutorName = dist.PaisDestinatario});
+            foreach (var innerJoin in innerJoinQuery)
+            {
+                Console.WriteLine(innerJoin.CustomerName);
+            
+            }
+
+        }
+
+        static void LambdaDataSource()
+        {
+            var queryAllCustomer = context.clientes;
+            foreach (var item in queryAllCustomer)
+            { 
+                Console.WriteLine(item.NombreCompañia);
+            }
+        }
+
     }
 }
